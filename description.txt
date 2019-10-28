@@ -30,5 +30,6 @@ Patch 4
 * Actual release
 Patch 5
 * Added mod homepage
-Patch 6
+Patch 6 & 7
 * Added icon.png
+* Added to github
