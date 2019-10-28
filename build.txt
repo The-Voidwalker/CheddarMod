@@ -1,0 +1,4 @@
+displayName = Cheddar Cheese
+author = KeeperAzra
+version = 0.1.0.6
+homepage = https://forums.terraria.org/index.php?threads/cheddar-cheese-mod.83729/

@@ -1,0 +1,34 @@
+This is the Cheddar Cheeze mod. It adds a few items that can be considered to unbalance the game.
+
+Autoswing code from the OmniSwing mod.
+
+Change Log:
+
+Version 0.1.0.0
+* Release with 14 new items.
+* Ammomancer pouch - Provides boosts to ranged damage and disables ammo consumption
+* Boot. - Upgrade to the Lava Waders and Frostspark Boots
+* Eternal Bacon - Non-consumable food item with a 60 minute buff duration
+* Flyte - Endgame movement accessory
+* Golden Sigil - Mid-late game combat accessory
+* Hero Emblem - Provides boosts to melee damage and makes melee weapons autoswing
+* Holy Spork - Mid game miscellaneous accessory
+* Infinity Gate - Endgame combat accessory, also disables all item consumption
+* Lapis Philosophorum - Endgame health and misc accessory
+* Pointy Pocket - Provides boosts to throwing damage and disables throwing item consumption
+* Red Octagon - Upgrade to the Ankh Shield
+* Star Rose - Provides boosts to magic damage and reduces mana costs by 100%
+* Star Threads - Upgrade to the Boot.
+* The Lift - Provides infinite jumping
+Patch 1
+* Code fixes
+Patch 2
+* Sprite updates
+Patch 3
+* Added changelog and fixed item descriptions
+Patch 4
+* Actual release
+Patch 5
+* Added mod homepage
+Patch 6
+* Added icon.png
