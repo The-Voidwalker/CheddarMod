@@ -1,10 +1,6 @@
-using System;
-using System.IO;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace CheddarMod
 {
@@ -25,6 +21,7 @@ namespace CheddarMod
 		public bool hero = false;
 		public bool trueHero = false;
 		public bool flyte = false;
+		public bool scope = false;
 
         public override void ResetEffects()
         {
@@ -35,6 +32,7 @@ namespace CheddarMod
 			hero = false;
 			trueHero = false;
 			flyte = false;
+			scope = false;
         }
 
         public override void PostUpdate()
@@ -46,6 +44,13 @@ namespace CheddarMod
 			if( this.flyte && player.wingTime < 10f )
 			{
 				player.wingTime += 200f;
+			}
+			if( this.scope && (player.inventory[player.selectedItem].useAmmo == AmmoID.Bullet ||
+				player.inventory[player.selectedItem].useAmmo == AmmoID.CandyCorn ||
+				player.inventory[player.selectedItem].useAmmo == AmmoID.Stake ||
+				player.inventory[player.selectedItem].useAmmo == AmmoID.Gel) )
+			{
+				player.scope = true;
 			}
         }
     }
