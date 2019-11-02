@@ -33,3 +33,5 @@ Patch 5
 Patch 6 & 7
 * Added icon.png
 * Added to github
+Patch 8
+* Fixed logic for scope in Infinity Gate
