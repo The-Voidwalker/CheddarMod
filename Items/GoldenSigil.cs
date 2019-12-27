@@ -31,11 +31,13 @@ namespace CheddarMod.Items
 			player.meleeDamage += 0.15f;
 			player.meleeCrit += 10;
 			player.magmaStone = true;
-			player.scope = true;
 			player.rangedCrit += 10;
 			player.rangedDamage += 0.15f;
 			player.magicQuiver = true;
 			player.arrowDamage += 0.15f;
+
+			CheddarModPlayer modPlayer = player.GetModPlayer<CheddarModPlayer>();
+			modPlayer.scope = true;
 		}
 
 		public override void AddRecipes()

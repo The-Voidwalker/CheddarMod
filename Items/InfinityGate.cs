@@ -32,7 +32,6 @@ namespace CheddarMod.Items
 			player.meleeDamage += 0.25f;
 			player.meleeCrit += 20;
 			player.magmaStone = true;
-			// player.scope = true;
 			player.rangedCrit += 20;
 			player.rangedDamage += 0.25f;
 			player.magicQuiver = true;
