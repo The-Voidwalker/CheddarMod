@@ -9,7 +9,7 @@ namespace CheddarMod.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Red Octagon");
-            Tooltip.SetDefault("Though the symbols on it have faded, its stopping power is still immense.");
+            Tooltip.SetDefault("Provides immunity to knockback and a large set of debuffs\nReduces damage taken by 15%\n\"Though the symbols on it have faded, its stopping power is still immense.\"");
         }
 
         public override void SetDefaults()
@@ -17,7 +17,7 @@ namespace CheddarMod.Items
             item.width = 30;
             item.height = 30;
             item.value = 300000;
-            item.rare = 8;
+            item.rare = ItemRarityID.Yellow;
             item.defense = 8;
             item.accessory = true;
         }

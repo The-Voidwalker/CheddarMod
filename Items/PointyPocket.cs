@@ -9,7 +9,7 @@ namespace CheddarMod.Items
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Pocket of Pointy Things");
-			Tooltip.SetDefault("Provides a boost to throwing abilities\nThrown items are never consumed");
+			Tooltip.SetDefault("Provides a boost to throwing abilities\nThrown items consumed less.");
 		}
 
 		public override void SetDefaults()
@@ -17,7 +17,7 @@ namespace CheddarMod.Items
 			item.width = 40;
 			item.height = 22;
 			item.value = 50000;
-			item.rare = 5;
+			item.rare = ItemRarityID.Pink;
 			item.accessory = true;
 		}
 
@@ -33,6 +33,7 @@ namespace CheddarMod.Items
 		public override void AddRecipes()
 		{
             ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(mod, "RadiantOoze");
 			recipe.AddIngredient(ItemID.ThrowingKnife, 100);
 			recipe.AddIngredient(ItemID.Shuriken, 100);
 			recipe.AddIngredient(ItemID.Leather, 5);

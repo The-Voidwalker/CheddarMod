@@ -17,21 +17,22 @@ namespace CheddarMod.Items
             item.width = 30;
             item.height = 18;
             item.value = 1000000;
-            item.rare = 11;
+            item.rare = ItemRarityID.Purple;
             item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.moveSpeed += 0.24f;
+            player.moveSpeed += 1.28f;
             player.waterWalk = true;
             player.fireWalk = true;
             player.lavaImmune = true;
             player.iceSkate = true;
             player.accFlipper = true;
             player.ignoreWater = true;
-            player.accRunSpeed = 8f;
+            player.accRunSpeed = 12f;
             player.rocketBoots = 3;
+			player.runAcceleration *= 2f;
 
             player.doubleJumpCloud = true;
             player.doubleJumpSandstorm = true;
@@ -41,7 +42,7 @@ namespace CheddarMod.Items
             player.jumpBoost = true;
             player.noFallDmg = true;
             player.autoJump = true;
-            player.jumpSpeedBoost = 2.4f;
+            player.jumpSpeedBoost = 3.6f;
 
             CheddarModPlayer modPlayer = player.GetModPlayer<CheddarModPlayer>();
             modPlayer.yeet = true;

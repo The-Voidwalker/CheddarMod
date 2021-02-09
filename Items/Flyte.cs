@@ -10,7 +10,7 @@ namespace CheddarMod.Items
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Flyte");
-			Tooltip.SetDefault("Flight Eternal");
+			Tooltip.SetDefault("Flight Eternal\nHover for even more speed!");
 		}
 
 		public override void SetDefaults()
@@ -24,20 +24,21 @@ namespace CheddarMod.Items
 
 		public override void UpdateAccessory(Player player, bool hideVisual)
 		{
-			player.moveSpeed += 0.32f;
+			player.moveSpeed += 2.56f;
             player.waterWalk = true;
             player.fireWalk = true;
             player.lavaImmune = true;
             player.iceSkate = true;
             player.accFlipper = true;
             player.ignoreWater = true;
-            player.accRunSpeed = 12f;
+            player.accRunSpeed = 16f;
             player.rocketBoots = 3;
+			player.runAcceleration *= 4f;
 
             player.jumpBoost = true;
             player.noFallDmg = true;
             player.autoJump = true;
-            player.jumpSpeedBoost = 3f;
+            player.jumpSpeedBoost = 6f;
 			player.wingTimeMax = 240;
 
 			player.blackBelt = true;
@@ -87,7 +88,10 @@ namespace CheddarMod.Items
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.MasterNinjaGear);
 			recipe.AddIngredient(mod, "StarThreads");
-			recipe.AddIngredient(ItemID.BeetleHusk, 5);
+			recipe.AddIngredient(ItemID.FragmentVortex, 5);
+			recipe.AddIngredient(ItemID.FragmentSolar, 5);
+			recipe.AddIngredient(ItemID.FragmentNebula, 5);
+			recipe.AddIngredient(ItemID.FragmentStardust, 5);
 			recipe.AddTile(TileID.LunarCraftingStation);
             recipe.SetResult(this);
             recipe.AddRecipe();

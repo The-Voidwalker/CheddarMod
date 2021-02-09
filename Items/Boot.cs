@@ -17,7 +17,7 @@ namespace CheddarMod.Items
             item.width = 30;
             item.height = 19;
             item.value = 600000;
-            item.rare = 9;
+            item.rare = ItemRarityID.Cyan;
             item.accessory = true;
         }
 
@@ -30,7 +30,7 @@ namespace CheddarMod.Items
             player.iceSkate = true;
             player.accFlipper = true;
             player.ignoreWater = true;
-            player.accRunSpeed = 6.75f;
+            player.accRunSpeed = 8f;
             player.rocketBoots = 3;
         }
 

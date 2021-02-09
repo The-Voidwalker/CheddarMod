@@ -17,7 +17,7 @@ namespace CheddarMod.Items
             item.width = 9;
             item.height = 25;
             item.value = 500000;
-            item.rare = 8;
+            item.rare = ItemRarityID.Yellow;
             item.accessory = true;
         }
 

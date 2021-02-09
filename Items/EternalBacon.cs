@@ -15,7 +15,7 @@ namespace CheddarMod.Items
         public override void SetDefaults()
         {
             item.UseSound = SoundID.Item2;
-            item.useStyle = 2;
+            item.useStyle = ItemUseStyleID.EatingUsing;
             item.useTurn = true;
             item.useAnimation = 17;
             item.useTime = 17;
@@ -25,7 +25,7 @@ namespace CheddarMod.Items
             item.height = 10;
             item.buffType = 26;
             item.buffTime = 216000;
-            item.rare = 2;
+            item.rare = ItemRarityID.Green;
             item.value = 10000;
         }
 

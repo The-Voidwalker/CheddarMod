@@ -9,7 +9,7 @@ namespace CheddarMod.Items
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Ammomancer's Pouch");
-			Tooltip.SetDefault("Reach beyond the world to never run out of ammunition\nProvides a small boost to ranged abilities");
+			Tooltip.SetDefault("Reduced chance to consume ammunition\nProvides a small boost to ranged abilities.");
 		}
 
 		public override void SetDefaults()
@@ -17,7 +17,7 @@ namespace CheddarMod.Items
 			item.width = 29;
 			item.height = 36;
 			item.value = 50000;
-			item.rare = 5;
+			item.rare = ItemRarityID.Pink;
 			item.accessory = true;
 		}
 
@@ -33,6 +33,7 @@ namespace CheddarMod.Items
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(mod, "EngravedLens");
 			recipe.AddIngredient(ItemID.WoodenArrow, 999);
 			recipe.AddIngredient(ItemID.MusketBall, 999);
 			recipe.AddIngredient(ItemID.Lens, 2);

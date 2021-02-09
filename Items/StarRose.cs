@@ -8,8 +8,8 @@ namespace CheddarMod.Items
     {
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Star Rose");
-            Tooltip.SetDefault("This beautiful red crystal is like a magician's cheese.\nDunno why though.");
+            DisplayName.SetDefault("Rosy Star");
+            Tooltip.SetDefault("This beautiful red crystal massively reduces mana costs in exchange for damage.");
         }
 
         public override void SetDefaults()
@@ -17,18 +17,18 @@ namespace CheddarMod.Items
             item.width = 22;
             item.height = 24;
             item.value = 100000;
-            item.rare = 5;
+            item.rare = ItemRarityID.Pink;
             item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.manaCost = 0f;
-            player.magicDamage += 0.05f;
+            player.manaCost -= 0.5f;
+            player.magicDamage -= 0.1f;
             player.magicCrit += 5;
         }
 
-        public override void AddRecipes()
+        /*public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(ItemID.ManaFlower);
@@ -37,6 +37,6 @@ namespace CheddarMod.Items
             recipe.AddTile(TileID.TinkerersWorkbench);
             recipe.SetResult(this);
             recipe.AddRecipe();
-        }
+        }*/
     }
 }

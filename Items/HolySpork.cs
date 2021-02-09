@@ -9,7 +9,7 @@ namespace CheddarMod.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Holy Spork");
-            Tooltip.SetDefault("All Hail The Spork!");
+            Tooltip.SetDefault("Increases armor penetration by 10\nProvides effects of components\n\"All Hail The Spork!\"");
         }
 
         public override void SetDefaults()
@@ -17,7 +17,7 @@ namespace CheddarMod.Items
             item.width = 12;
             item.height = 38;
             item.value = 600000;
-            item.rare = 7;
+            item.rare = ItemRarityID.Lime;
             item.lifeRegen = 2;
             item.accessory = true;
         }

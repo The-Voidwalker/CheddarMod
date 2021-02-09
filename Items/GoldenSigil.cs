@@ -9,7 +9,7 @@ namespace CheddarMod.Items
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Golden Sigil");
-			Tooltip.SetDefault("The mark of a great warrior");
+			Tooltip.SetDefault("The mark of a great warrior\nIncreases magic, ranged, and melee damage by 15%\nIncreases crit chance for the same by 10%\nProvides the benefits of its components");
 		}
 
 		public override void SetDefaults()
@@ -17,7 +17,7 @@ namespace CheddarMod.Items
 			item.width = 24;
 			item.height = 32;
 			item.value = 500000;
-			item.rare = 10;
+			item.rare = ItemRarityID.Red;
 			item.accessory = true;
 		}
 

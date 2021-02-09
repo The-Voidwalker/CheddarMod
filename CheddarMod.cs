@@ -1,3 +1,4 @@
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -6,54 +7,63 @@ namespace CheddarMod
 {
 	public class CheddarMod : Mod
 	{
-		public CheddarMod()
+		public CheddarMod() {}
+
+		public static CheddarMod Instance;
+
+		public override void Load()
 		{
-			// Defaults are exactly what they should be
+			Instance = this;
 		}
+
+		public override void Unload()
+		{
+			Instance = null;
+		}
+
+		public override void HandlePacket(BinaryReader reader, int whoAmI)
+        {
+            NetHelper.HandlePacket(reader, whoAmI);
+        }
 	}
 
-    public class CheddarModPlayer : ModPlayer
-    {
-        public bool yeet = false;
-		public bool pocket = false;
-		public bool ammomancer = false;
-		public bool stuff = false;
-		public bool hero = false;
-		public bool trueHero = false;
-		public bool flyte = false;
-		public bool scope = false;
+	public class CheddarWorld : ModWorld
+	{
+		// Don't need/want to save this
+		public static bool timeWheel = false;
 
-        public override void ResetEffects()
-        {
-            yeet = false;
-			pocket = false;
-			ammomancer = false;
-			stuff = false;
-			hero = false;
-			trueHero = false;
-			flyte = false;
-			scope = false;
-        }
+		public override void Initialize()
+		{
+			timeWheel = false;
+		}
 
-        public override void PostUpdate()
-        {
-            if( this.yeet && !player.jumpAgainCloud )
-            {
-                player.jumpAgainCloud = true;
-            }
-			if( this.flyte && player.wingTime < 10f )
+		public override void NetSend(BinaryWriter writer)
+		{
+			writer.Write(timeWheel);
+		}
+
+		public override void NetReceive(BinaryReader reader)
+		{
+			timeWheel = reader.ReadBoolean();
+		}
+
+		public override void PreUpdate()
+		{
+			// TODO This effect pauses briefly at 4:30am in multiplayer, why?
+			if ( Main.sundialCooldown == 8 )
+				return; // Regular sundial effect in use, don't do anything
+
+			if ( timeWheel )
 			{
-				player.wingTime += 200f;
+				Main.dayRate = 60;
+				Main.fastForwardTime = true;
 			}
-			if( this.scope && (player.inventory[player.selectedItem].useAmmo == AmmoID.Bullet ||
-				player.inventory[player.selectedItem].useAmmo == AmmoID.CandyCorn ||
-				player.inventory[player.selectedItem].useAmmo == AmmoID.Stake ||
-				player.inventory[player.selectedItem].useAmmo == AmmoID.Gel) )
+			else
 			{
-				player.scope = true;
+				Main.fastForwardTime = false; // dayRate should be reset automatically by this
 			}
-        }
-    }
+		}
+	}
 
 	public class CheddarItem : GlobalItem
 	{
@@ -64,13 +74,14 @@ namespace CheddarMod
 
 		bool RealAutoReuseValue = false;
 		bool FakeAutoReuse = false;
+		int oldDuration = 0;
 
 		public override bool CloneNewInstances => true;
 
 		public override bool ConsumeAmmo(Item item, Player player)
 		{
 			CheddarModPlayer modPlayer = player.GetModPlayer<CheddarModPlayer>();
-			if( modPlayer.ammomancer || modPlayer.stuff )
+			if( modPlayer.tome || modPlayer.stuff || (modPlayer.ammomancer && Main.rand.Next(2) == 0) )
 			{
 				return false;
 			}
@@ -84,7 +95,11 @@ namespace CheddarMod
 			{
 				return false;
 			}
-			else if ( item.thrown && modPlayer.pocket )
+			else if ( item.thrown && (modPlayer.scroll || (modPlayer.pocket && Main.rand.Next(2) == 0) ) )
+			{
+				return false;
+			}
+			else if ( (item.buffType > 0 || item.potion || item.healLife > 0 || item.healMana > 0) && modPlayer.potionSaver )
 			{
 				return false;
 			}
@@ -113,6 +128,21 @@ namespace CheddarMod
 			}
 			return base.CanUseItem(item, player);
 		}
+
+		public override bool UseItem(Item item, Player player)
+		{
+			if(item.buffTime > 0)
+			{
+				oldDuration = oldDuration > 0 ? oldDuration : item.buffTime;
+				item.buffTime = (int)(oldDuration * player.GetModPlayer<CheddarModPlayer>().bBoost);
+			}
+			return false;
+		}
+
+		public override void GrabRange(Item item, Player player, ref int grabRange)
+		{
+			grabRange += player.GetModPlayer<CheddarModPlayer>().grabBoost;
+		}
 	}
 
 	public class CheddarProjectile : GlobalProjectile
@@ -126,6 +156,103 @@ namespace CheddarMod
 			{
 				projectile.timeLeft = Main.player[projectile.owner].itemAnimation;
 				projectile.netUpdate = true;
+			}
+		}
+	}
+
+	public class CheddarGlobalNPC : GlobalNPC
+	{
+		private int coinCount = 0;
+		public bool midasCurse = false;
+
+		public override bool InstancePerEntity => true;
+
+		public override void ResetEffects(NPC npc)
+		{
+			midasCurse = false;
+		}
+
+		public override void UpdateLifeRegen(NPC npc, ref int damage)
+		{
+			if( this.midasCurse )
+			{
+				if(npc.lifeRegen > 0)
+				{
+					npc.lifeRegen = 0;
+				}
+				npc.lifeRegen -= 40;
+				if( damage < 5 )
+				{
+					damage = 5;
+				}
+
+				this.coinCount++;
+				if( coinCount > 120 )
+				{
+					float r = Main.rand.NextFloat();
+					int coin;
+					int num;
+					if( r < 0.6f )
+					{
+						coin = ItemID.CopperCoin;
+						num = Main.rand.Next(20, 100);
+					}
+					else if ( r < 0.9f )
+					{
+						coin = ItemID.SilverCoin;
+						num = Main.rand.Next(10, 60);
+					}
+					else
+					{
+						coin = ItemID.GoldCoin;
+						num = Main.rand.Next(3, 13);
+					}
+
+					Item.NewItem(npc.getRect(), coin, num);
+					this.coinCount = 0;
+				}
+			}
+			else
+			{
+				this.coinCount = 0;
+			}
+		}
+
+		public override void NPCLoot(NPC npc)
+		{
+			if(npc.type == NPCID.KingSlime && Main.rand.Next(5) == 0)
+			{
+				Item.NewItem(npc.getRect(), mod.ItemType("RadiantOoze"));
+			}
+			if((((npc.type == NPCID.EaterofWorldsHead || npc.type == NPCID.EaterofWorldsBody || npc.type == NPCID.EaterofWorldsTail) && npc.boss) ||
+				npc.type == NPCID.BrainofCthulhu) && Main.rand.NextFloat() < 0.15f)
+			{
+				Item.NewItem(npc.getRect(), mod.ItemType("WornEmblem"));
+			}
+			if(npc.type == NPCID.EyeofCthulhu && Main.rand.Next(5) == 0)
+			{
+				Item.NewItem(npc.getRect(), mod.ItemType("EngravedLens"));
+			}
+			if(npc.type == NPCID.QueenBee && Main.rand.NextFloat() < 0.15f)
+			{
+				Item.NewItem(npc.getRect(), mod.ItemType("StarRose"));
+			}
+			if(npc.type == NPCID.SkeletronHead && Main.rand.NextFloat() < 0.15f)
+			{
+				Item.NewItem(npc.getRect(), mod.ItemType("CarvedBone"));
+			}
+			if((npc.type == NPCID.CultistBoss || npc.type == NPCID.LunarTowerSolar ||
+				npc.type == NPCID.LunarTowerStardust || npc.type == NPCID.LunarTowerNebula ||
+				npc.type == NPCID.LunarTowerVortex) && Main.rand.Next(npc.type == NPCID.CultistBoss ? 10 : 20) == 0)
+			{
+				Item.NewItem(npc.getRect(), mod.ItemType("CosmicSeal"));
+			}
+			// The set of enemies from StardustWormHead to VortexSoldier is a continuous set of Lunar Events enemies
+			// BUG: One of the pillars is in this set, but whatever
+			if(Main.rand.Next(500) == 0 &&
+				(npc.type >= NPCID.StardustWormHead && npc.type <= NPCID.VortexSoldier))
+			{
+				Item.NewItem(npc.getRect(), mod.ItemType("CosmicSeal"));
 			}
 		}
 	}
