@@ -55,16 +55,16 @@ namespace CheddarMod
 
         public override void GetHealLife(Item item, bool quickHeal, ref int healValue)
         {
-            healValue = (int)(healValue * this.hBoost);
+            healValue = (int)(healValue * hBoost);
         }
 
         public override void PreUpdate()
         {
-            if (this.flyte)
+            if (flyte)
             {
                 player.maxFallSpeed += 5f;
             }
-            else if (this.yeet)
+            else if (yeet)
             {
                 player.maxFallSpeed += 3f;
             }
@@ -72,33 +72,38 @@ namespace CheddarMod
 
         public override void PostUpdate()
         {
-            if (this.yeet && !player.jumpAgainCloud)
+            if (yeet && !player.jumpAgainCloud)
             {
                 player.jumpAgainCloud = true;
             }
-            if (this.flyte && player.wingTime < 10f)
+            if (flyte && player.wingTime < 10f)
             {
                 player.wingTime += 200f;
             }
-            if (this.scope && (player.inventory[player.selectedItem].useAmmo == AmmoID.Bullet ||
-                player.inventory[player.selectedItem].useAmmo == AmmoID.CandyCorn ||
-                player.inventory[player.selectedItem].useAmmo == AmmoID.Stake ||
-                player.inventory[player.selectedItem].useAmmo == AmmoID.Gel) &&
-                player.altFunctionUse == 0)
+            if ((player.inventory[player.selectedItem].useAmmo == AmmoID.Bullet
+                 || player.inventory[player.selectedItem].useAmmo == AmmoID.CandyCorn
+                 || player.inventory[player.selectedItem].useAmmo == AmmoID.Stake
+                 || player.inventory[player.selectedItem].useAmmo == AmmoID.Gel)
+                && scope && player.altFunctionUse == 0)
             {
                 player.scope = true;
             }
-            if (this.sickFromSeal && player.potionDelay == 0)
+            if (sickFromSeal && player.potionDelay == 0)
             {
-                this.sickFromSeal = false;
+                sickFromSeal = false;
             }
 
-            if (this.midasCurse && player.whoAmI == Main.myPlayer)
+            if (midasCurse && player.whoAmI == Main.myPlayer)
             {
                 for (int i = 0; i < 200; i++)
                 {
                     NPC npc = Main.npc[i];
-                    if (npc.active && !npc.friendly && npc.damage > 0 && !npc.dontTakeDamage && !npc.buffImmune[mod.BuffType("MidasCurse")] && Vector2.Distance(player.Center, npc.Center) <= 400f)
+                    if (npc.active
+                        && !npc.friendly
+                        && npc.damage > 0
+                        && !npc.dontTakeDamage
+                        && !npc.buffImmune[mod.BuffType("MidasCurse")]
+                        && Vector2.Distance(player.Center, npc.Center) <= 400f)
                     {
                         npc.AddBuff(mod.BuffType("MidasCurse"), 120);
                     }
@@ -108,7 +113,7 @@ namespace CheddarMod
 
         public override void UpdateBadLifeRegen()
         {
-            if (this.coinDecay)
+            if (coinDecay)
             {
                 if (player.lifeRegen > 0)
                 {
@@ -117,8 +122,8 @@ namespace CheddarMod
                 player.lifeRegenTime = 0;
                 player.lifeRegen -= 20;
 
-                this.coinCount++;
-                if (this.coinCount > 120)
+                coinCount++;
+                if (coinCount > 120)
                 {
                     float r = Main.rand.NextFloat();
                     int coin;
@@ -140,26 +145,28 @@ namespace CheddarMod
                     }
 
                     player.QuickSpawnItem(coin, num);
-                    this.coinCount = 0;
+                    coinCount = 0;
                 }
             }
             else
             {
-                this.coinCount = 0;
+                coinCount = 0;
             }
         }
 
-        public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public override bool PreKill(
+            double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore,
+            ref PlayerDeathReason damageSource)
         {
-            if (this.healBeforeDeath && Main.rand.Next(10) == 0)
+            if (healBeforeDeath && Main.rand.Next(10) == 0)
             {
-                if (!this.sickFromSeal)
+                if (!sickFromSeal)
                 {
                     player.ClearBuff(BuffID.PotionSickness);
                     player.potionDelay = 0;
                 }
                 player.QuickHeal();
-                this.sickFromSeal = true;
+                sickFromSeal = true;
                 if (player.statLife <= 0)
                 {
                     return true;
@@ -169,17 +176,18 @@ namespace CheddarMod
             return true;
         }
 
-        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage,
-                                                            ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public override bool PreHurt(
+            bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage,
+            ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            damage = (int)(damage * (1.001f + this.resistance));
+            damage = (int)(damage * (1.001f + resistance));
 
-            if (crit && Main.rand.NextFloat() < this.resistance)
+            if (crit && Main.rand.NextFloat() < resistance)
             {
                 crit = false;
             }
 
-            if (damage > 1 && this.coinDefense && Main.rand.Next(5) == 0)
+            if (damage > 1 && coinDefense && Main.rand.Next(5) == 0)
             {
                 float r = Main.rand.NextFloat();
                 int num = Main.rand.Next(11);

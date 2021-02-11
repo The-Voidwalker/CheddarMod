@@ -51,7 +51,9 @@ namespace CheddarMod
         {
             // TODO This effect pauses briefly at 4:30am in multiplayer, why?
             if (Main.sundialCooldown == 8)
+            {
                 return; // Regular sundial effect in use, don't do anything
+            }
 
             if (timeWheel)
             {
@@ -146,9 +148,10 @@ namespace CheddarMod
         public override void AI(Projectile projectile)
         {
             CheddarModPlayer modPlayer = Main.player[projectile.owner].GetModPlayer<CheddarModPlayer>();
-            if ((projectile.aiStyle == 19 || projectile.aiStyle == 699) &&
-                Main.player[projectile.owner].HeldItem.melee && (modPlayer.hero || modPlayer.trueHero) &&
-                projectile.timeLeft > Main.player[projectile.owner].itemAnimation)
+            if ((projectile.aiStyle == 19 || projectile.aiStyle == 699)
+                && Main.player[projectile.owner].HeldItem.melee
+                && (modPlayer.hero || modPlayer.trueHero)
+                && projectile.timeLeft > Main.player[projectile.owner].itemAnimation)
             {
                 projectile.timeLeft = Main.player[projectile.owner].itemAnimation;
                 projectile.netUpdate = true;
@@ -170,7 +173,7 @@ namespace CheddarMod
 
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
-            if (this.midasCurse)
+            if (midasCurse)
             {
                 if (npc.lifeRegen > 0)
                 {
@@ -182,7 +185,7 @@ namespace CheddarMod
                     damage = 5;
                 }
 
-                this.coinCount++;
+                coinCount++;
                 if (coinCount > 120)
                 {
                     float r = Main.rand.NextFloat();
@@ -205,12 +208,12 @@ namespace CheddarMod
                     }
 
                     Item.NewItem(npc.getRect(), coin, num);
-                    this.coinCount = 0;
+                    coinCount = 0;
                 }
             }
             else
             {
-                this.coinCount = 0;
+                coinCount = 0;
             }
         }
 
@@ -220,33 +223,35 @@ namespace CheddarMod
             {
                 Item.NewItem(npc.getRect(), mod.ItemType("RadiantOoze"));
             }
-            if ((((npc.type == NPCID.EaterofWorldsHead || npc.type == NPCID.EaterofWorldsBody || npc.type == NPCID.EaterofWorldsTail) && npc.boss) ||
-                npc.type == NPCID.BrainofCthulhu) && Main.rand.NextFloat() < 0.15f)
+            else if ((((npc.type == NPCID.EaterofWorldsHead || npc.type == NPCID.EaterofWorldsBody || npc.type == NPCID.EaterofWorldsTail) && npc.boss)
+                || npc.type == NPCID.BrainofCthulhu) && Main.rand.NextFloat() < 0.15f)
             {
                 Item.NewItem(npc.getRect(), mod.ItemType("WornEmblem"));
             }
-            if (npc.type == NPCID.EyeofCthulhu && Main.rand.Next(5) == 0)
+            else if (npc.type == NPCID.EyeofCthulhu && Main.rand.Next(5) == 0)
             {
                 Item.NewItem(npc.getRect(), mod.ItemType("EngravedLens"));
             }
-            if (npc.type == NPCID.QueenBee && Main.rand.NextFloat() < 0.15f)
+            else if (npc.type == NPCID.QueenBee && Main.rand.NextFloat() < 0.15f)
             {
                 Item.NewItem(npc.getRect(), mod.ItemType("StarRose"));
             }
-            if (npc.type == NPCID.SkeletronHead && Main.rand.NextFloat() < 0.15f)
+            else if (npc.type == NPCID.SkeletronHead && Main.rand.NextFloat() < 0.15f)
             {
                 Item.NewItem(npc.getRect(), mod.ItemType("CarvedBone"));
             }
-            if ((npc.type == NPCID.CultistBoss || npc.type == NPCID.LunarTowerSolar ||
-                npc.type == NPCID.LunarTowerStardust || npc.type == NPCID.LunarTowerNebula ||
-                npc.type == NPCID.LunarTowerVortex) && Main.rand.Next(npc.type == NPCID.CultistBoss ? 10 : 20) == 0)
+            else if ((npc.type == NPCID.CultistBoss
+                 || npc.type == NPCID.LunarTowerSolar
+                 || npc.type == NPCID.LunarTowerStardust
+                 || npc.type == NPCID.LunarTowerNebula
+                 || npc.type == NPCID.LunarTowerVortex)
+                && Main.rand.Next(npc.type == NPCID.CultistBoss ? 10 : 20) == 0)
             {
                 Item.NewItem(npc.getRect(), mod.ItemType("CosmicSeal"));
             }
             // The set of enemies from StardustWormHead to VortexSoldier is a continuous set of Lunar Events enemies
             // BUG: One of the pillars is in this set, but whatever
-            if (Main.rand.Next(500) == 0 &&
-                (npc.type >= NPCID.StardustWormHead && npc.type <= NPCID.VortexSoldier))
+            else if (Main.rand.Next(500) == 0 && npc.type >= NPCID.StardustWormHead && npc.type <= NPCID.VortexSoldier)
             {
                 Item.NewItem(npc.getRect(), mod.ItemType("CosmicSeal"));
             }
