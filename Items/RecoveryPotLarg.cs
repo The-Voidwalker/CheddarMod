@@ -22,6 +22,9 @@ namespace CheddarMod.Items
             item.useStyle = ItemUseStyleID.EatingUsing;
             item.useAnimation = 10;
             item.useTime = 10;
+            item.consumable = true;
+            item.maxStack = 30;
+            item.UseSound = SoundID.Item3;
         }
 
         public override void AddRecipes()

@@ -21,10 +21,6 @@ namespace CheddarMod.Buffs
                 counter = 0;
                 int recover = (int)(player.statLifeMax2 * 0.011f);
                 player.statLife += recover;
-                if (player.statLife > player.statLifeMax2)
-                {
-                    player.statLife = player.statLifeMax2;
-                }
                 player.HealEffect(recover, true);
             }
         }
