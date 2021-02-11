@@ -32,7 +32,7 @@ namespace CheddarMod.Items
             player.ignoreWater = true;
             player.accRunSpeed = 12f;
             player.rocketBoots = 3;
-			player.runAcceleration *= 2f;
+            player.runAcceleration *= 2f;
 
             player.doubleJumpCloud = true;
             player.doubleJumpSandstorm = true;

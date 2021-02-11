@@ -1,9 +1,7 @@
-using System;
 using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace CheddarMod
 {
@@ -35,24 +33,24 @@ namespace CheddarMod
 
         public static void ReceiveWheelUpdate(BinaryReader reader)
         {
-			bool flag = reader.ReadBoolean();
-			if (flag)
-			{
-				// Console.WriteLine("Enabled via packet");
-				Main.dayRate = 60;
-				Main.fastForwardTime = true;
-			}
-			else
-			{
-				// Console.WriteLine("Disabled via packet");
-				Main.fastForwardTime = false;
-			}
-			CheddarWorld.timeWheel = flag;
+            bool flag = reader.ReadBoolean();
+            if (flag)
+            {
+                // Console.WriteLine("Enabled via packet");
+                Main.dayRate = 60;
+                Main.fastForwardTime = true;
+            }
+            else
+            {
+                // Console.WriteLine("Disabled via packet");
+                Main.fastForwardTime = false;
+            }
+            CheddarWorld.timeWheel = flag;
             // CheddarWorld.timeWheel = reader.ReadBoolean();
-			if (Main.netMode == NetmodeID.Server)
-			{
-				NetMessage.SendData(MessageID.WorldData); // Just in case
-			}
+            if (Main.netMode == NetmodeID.Server)
+            {
+                NetMessage.SendData(MessageID.WorldData); // Just in case
+            }
         }
     }
 
