@@ -23,6 +23,7 @@ namespace CheddarMod
         public bool scroll = false;
         public float hBoost = 1f;
         public float bBoost = 1f;
+        public float bBoost2 = 1f;
         public bool midasCurse = false;
         public bool coinDecay = false;
         private int coinCount = 0;
@@ -45,6 +46,10 @@ namespace CheddarMod
             tome = false;
             scroll = false;
             hBoost = 1f;
+            if (bBoost != bBoost2)
+            {
+                bBoost2 = bBoost; // Delay updates to bBoost
+            }
             bBoost = 1f;
             midasCurse = false;
             coinDecay = false;

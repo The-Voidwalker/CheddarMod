@@ -127,14 +127,15 @@ namespace CheddarMod
             return base.CanUseItem(item, player);
         }
 
-        public override bool UseItem(Item item, Player player)
+        public override void UpdateInventory(Item item, Player player)
         {
             if (item.buffTime > 0)
             {
                 oldDuration = oldDuration > 0 ? oldDuration : item.buffTime;
-                item.buffTime = (int)(oldDuration * player.GetModPlayer<CheddarModPlayer>().bBoost);
+                // This method runs after ResetDefaults, but before UpdateAccessories
+                // bBoost is therefore always 1, so bBoost2 updates one tick after actual changes to bBoost
+                item.buffTime = (int)(oldDuration * player.GetModPlayer<CheddarModPlayer>().bBoost2);
             }
-            return false;
         }
 
         public override void GrabRange(Item item, Player player, ref int grabRange)
