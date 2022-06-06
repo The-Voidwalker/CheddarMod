@@ -39,14 +39,10 @@ namespace CheddarMod.Items
             if (CheddarWorld.timeWheel)
             {
                 enable = false;
-                // Main.NewText("Disabling");
-                // Console.WriteLine("Disabled");
             }
             else
             {
                 enable = true;
-                // Main.NewText("Enabling");
-                // Console.WriteLine("Enabled");
             }
 
             ToggleWheel(enable, player);

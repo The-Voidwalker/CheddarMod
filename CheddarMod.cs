@@ -50,6 +50,13 @@ namespace CheddarMod
                 ItemID.PlatinumOre
             });
             RecipeGroup.RegisterGroup("Cheddar:GoldOres", goldOre);
+
+            RecipeGroup earlyHMOre = new RecipeGroup(() => "Cobalt or Palladium ore", new int[]
+            {
+                ItemID.CobaltOre,
+                ItemID.PalladiumOre
+            });
+            RecipeGroup.RegisterGroup("Cheddar:CobaltOres", earlyHMOre);
         }
     }
 

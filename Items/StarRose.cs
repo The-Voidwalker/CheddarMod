@@ -27,16 +27,5 @@ namespace CheddarMod.Items
             player.magicDamage -= 0.1f;
             player.magicCrit += 5;
         }
-
-        /*public override void AddRecipes()
-        {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.ManaFlower);
-            recipe.AddIngredient(ItemID.ManaCrystal, 5);
-            recipe.AddIngredient(ItemID.Amethyst, 5);
-            recipe.AddTile(TileID.TinkerersWorkbench);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
-        }*/
     }
 }

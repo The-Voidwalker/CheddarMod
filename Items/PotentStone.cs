@@ -34,18 +34,10 @@ namespace CheddarMod.Items
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(mod, "Regenerator");
             recipe.AddIngredient(ItemID.SoulofLight, 2);
-            recipe.AddIngredient(ItemID.CobaltOre, 3);
+            recipe.AddRecipeGroup("Cheddar:CobaltOres", 3);
             recipe.AddTile(TileID.MythrilAnvil);
             recipe.SetResult(this);
             recipe.AddRecipe();
-
-            ModRecipe recipe2 = new ModRecipe(mod);
-            recipe2.AddIngredient(mod, "Regenerator");
-            recipe2.AddIngredient(ItemID.SoulofLight, 2);
-            recipe2.AddIngredient(ItemID.PalladiumOre, 3);
-            recipe2.AddTile(TileID.MythrilAnvil);
-            recipe2.SetResult(this);
-            recipe2.AddRecipe();
         }
     }
 }

@@ -52,7 +52,6 @@ namespace CheddarMod.Items
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(mod, "Boot");
-            //recipe.AddIngredient(mod, "YeetForce");
             recipe.AddIngredient(ItemID.SoulofFlight, 7);
             recipe.AddIngredient(ItemID.BundleofBalloons);
             recipe.AddIngredient(ItemID.FrogLeg);
