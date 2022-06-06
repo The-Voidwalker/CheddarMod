@@ -9,7 +9,7 @@ namespace CheddarMod.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Holy Spork");
-            Tooltip.SetDefault("Increases armor penetration by 10\nProvides effects of components\n\"All Hail The Spork!\"");
+            Tooltip.SetDefault("Increases armor penetration by 10.\nReduces potion cooldown.\nIncreases invincibility time when taking damage, and stars rain down while invincibility is active.\n\"All Hail The Spork!\"");
         }
 
         public override void SetDefaults()

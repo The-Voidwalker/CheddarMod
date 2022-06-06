@@ -30,7 +30,7 @@ namespace CheddarMod.Items
             player.iceSkate = true;
             player.accFlipper = true;
             player.ignoreWater = true;
-            player.accRunSpeed = 8f;
+            player.accRunSpeed = 6f;
             player.rocketBoots = 3;
         }
 

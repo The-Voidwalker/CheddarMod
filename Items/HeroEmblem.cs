@@ -9,7 +9,7 @@ namespace CheddarMod.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Hero's Emblem");
-            Tooltip.SetDefault("Its power has been restored.\nIncreases Melee stats and Melee weapons auto swing");
+            Tooltip.SetDefault("Its power has been restored.\nIncreases Melee damage and crit by 15% and Melee speed by 10%.\nMelee weapons auto swing");
         }
 
         public override void SetDefaults()
@@ -35,17 +35,10 @@ namespace CheddarMod.Items
         {
             ModRecipe recipeGold = new ModRecipe(mod);
             recipeGold.AddIngredient(mod, "WornEmblem");
-            recipeGold.AddIngredient(ItemID.GoldBar, 15);
+            recipeGold.AddRecipeGroup("Cheddar:GoldBars");
             recipeGold.AddTile(TileID.MythrilAnvil);
             recipeGold.SetResult(this);
             recipeGold.AddRecipe();
-
-            ModRecipe recipePlat = new ModRecipe(mod);
-            recipePlat.AddIngredient(mod, "WornEmblem");
-            recipePlat.AddIngredient(ItemID.PlatinumBar, 15);
-            recipePlat.AddTile(TileID.MythrilAnvil);
-            recipePlat.SetResult(this);
-            recipePlat.AddRecipe();
         }
     }
 }

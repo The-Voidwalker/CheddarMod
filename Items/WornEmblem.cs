@@ -26,7 +26,7 @@ namespace CheddarMod.Items
             CheddarModPlayer modPlayer = player.GetModPlayer<CheddarModPlayer>();
             modPlayer.hero = true;
 
-            player.meleeSpeed -= 0.15f;
+            player.meleeSpeed -= 0.10f;
             player.meleeDamage += 0.05f;
             player.meleeCrit += 5;
         }

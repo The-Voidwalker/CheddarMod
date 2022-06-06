@@ -30,7 +30,7 @@ namespace CheddarMod.Items
             player.iceSkate = true;
             player.accFlipper = true;
             player.ignoreWater = true;
-            player.accRunSpeed = 12f;
+            player.accRunSpeed = 9f;
             player.rocketBoots = 3;
             player.runAcceleration *= 2f;
 
@@ -52,7 +52,10 @@ namespace CheddarMod.Items
         {
             ModRecipe recipe = new ModRecipe(mod);
             recipe.AddIngredient(mod, "Boot");
-            recipe.AddIngredient(mod, "YeetForce");
+            //recipe.AddIngredient(mod, "YeetForce");
+            recipe.AddIngredient(ItemID.SoulofFlight, 7);
+            recipe.AddIngredient(ItemID.BundleofBalloons);
+            recipe.AddIngredient(ItemID.FrogLeg);
             recipe.AddIngredient(ItemID.SoulofMight);
             recipe.AddIngredient(ItemID.SoulofSight);
             recipe.AddIngredient(ItemID.SoulofFright);

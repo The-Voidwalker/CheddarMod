@@ -4,6 +4,15 @@ Autoswing code from the OmniSwing mod.
 
 Change Log:
 
+Version 0.1.1.0
+* Reworked some existing items.
+* Added new charm items (Glass Omega and Silver Wings) that are activated by right clicking in inventory.
+* Converted Flyte into a charm.
+* Converted The Lift into a utility item called Golden Arrow.
+* Sprite changes and updates.
+* Added other new accessories.
+* Added restoration potions, which privide small healing at regular intervals.
+
 Version 0.1.0.0
 * Release with 14 new items.
 * Ammomancer pouch - Provides boosts to ranged damage and disables ammo consumption

@@ -57,6 +57,7 @@ namespace CheddarMod.Items
                 modPlayer.scope = true;
             }
             modPlayer.healBeforeDeath = true;
+            //modPlayer.flyte = true;
         }
 
         public override void AddRecipes()

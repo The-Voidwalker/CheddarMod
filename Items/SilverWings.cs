@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
@@ -6,48 +6,23 @@ using Terraria.ModLoader;
 
 namespace CheddarMod.Items
 {
-    public class Flyte : ModItem
+    class SilverWings : ModItem
     {
         private bool active = false;
-        
+
         public override void SetStaticDefaults()
         {
-            DisplayName.SetDefault("Flyte");
-            Tooltip.SetDefault("Use this item to throw yourself toward your mouse.\n" +
-                "This reconstructed charm can be activated to grant infinite flight.\n" +
+            DisplayName.SetDefault("Silver Wings");
+            Tooltip.SetDefault("These delicate silver wings can grant immunity to fall damage, and give an extra jump without using an accessory.\n" +
                 "Right click the charm in your inventory to gain its effect.");
         }
 
         public override void SetDefaults()
         {
-            item.width = 26;
-            item.height = 38;
-            item.value = 1000000;
-            item.rare = 12;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.channel = true;
-            item.useTime = 1;
-            item.useAnimation = 1;
-            item.autoReuse = true;
-            item.useTurn = true;
-        }
-
-        public override bool UseItem(Player player)
-        {
-            Vector2 mouse = Main.MouseWorld;
-            Vector2 direction = mouse - player.Center;
-            if (direction.Length() < 40)
-            {
-                direction = Vector2.Zero;
-                player.gravity = 0;
-            }
-            else
-            {
-                direction.Normalize();
-                direction *= 50;
-            }
-            player.velocity = direction;
-            return false;
+            item.width = 10;
+            item.height = 10;
+            item.rare = ItemRarityID.LightRed;
+            item.value = 777000;
         }
 
         public override bool ConsumeItem(Player player)
@@ -63,7 +38,7 @@ namespace CheddarMod.Items
         public override void RightClick(Player player)
         {
             CheddarModPlayer modPlayer = player.GetModPlayer<CheddarModPlayer>();
-            modPlayer.flyte = !modPlayer.flyte;
+            modPlayer.silverWings = !modPlayer.silverWings;
         }
 
         public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
@@ -82,17 +57,15 @@ namespace CheddarMod.Items
 
         public override void UpdateInventory(Player player)
         {
-            active = player.GetModPlayer<CheddarModPlayer>().flyte;
+            active = player.GetModPlayer<CheddarModPlayer>().silverWings;
         }
 
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod, "YeetForce");
-            recipe.AddIngredient(mod, "SilverWings");
-            recipe.AddIngredient(ItemID.SoulofFright, 7);
-            recipe.AddIngredient(ItemID.SoulofMight, 7);
-            recipe.AddIngredient(ItemID.SoulofSight, 7);
+            recipe.AddRecipeGroup("Cheddar:SilverBars", 7);
+            recipe.AddIngredient(ItemID.Cloud, 7);
+            recipe.AddIngredient(ItemID.Feather, 7);
             recipe.AddTile(TileID.TinkerersWorkbench);
             recipe.SetResult(this);
             recipe.AddRecipe();

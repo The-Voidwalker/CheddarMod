@@ -1,7 +1,9 @@
+using System.ComponentModel;
 using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 
 namespace CheddarMod
 {
@@ -24,6 +26,30 @@ namespace CheddarMod
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
             NetHelper.HandlePacket(reader, whoAmI);
+        }
+
+        public override void AddRecipeGroups()
+        {
+            RecipeGroup group = new RecipeGroup(() => "Silver or Tungsten bar", new int[]
+            {
+                ItemID.SilverBar,
+                ItemID.TungstenBar
+            });
+            RecipeGroup.RegisterGroup("Cheddar:SilverBars", group);
+
+            RecipeGroup gold = new RecipeGroup(() => "Gold or Platinum bar", new int[]
+            {
+                ItemID.GoldBar,
+                ItemID.PlatinumBar
+            });
+            RecipeGroup.RegisterGroup("Cheddar:GoldBars", gold);
+
+            RecipeGroup goldOre = new RecipeGroup(() => "Gold or Platinum ore", new int[]
+            {
+                ItemID.GoldOre,
+                ItemID.PlatinumOre
+            });
+            RecipeGroup.RegisterGroup("Cheddar:GoldOres", goldOre);
         }
     }
 
@@ -79,21 +105,17 @@ namespace CheddarMod
         public override bool ConsumeAmmo(Item item, Player player)
         {
             CheddarModPlayer modPlayer = player.GetModPlayer<CheddarModPlayer>();
-            if (modPlayer.tome || modPlayer.stuff || (modPlayer.ammomancer && Main.rand.Next(2) == 0))
-            {
-                return false;
-            }
-            return true;
+            return !modPlayer.tome && !modPlayer.stuff && !modPlayer.omega && (!modPlayer.ammomancer || !Main.rand.NextBool(2));
         }
 
         public override bool ConsumeItem(Item item, Player player)
         {
             CheddarModPlayer modPlayer = player.GetModPlayer<CheddarModPlayer>();
-            if (modPlayer.stuff)
+            if (modPlayer.stuff || modPlayer.omega)
             {
                 return false;
             }
-            else if (item.thrown && (modPlayer.scroll || (modPlayer.pocket && Main.rand.Next(2) == 0)))
+            else if (item.thrown && (modPlayer.scroll || (modPlayer.pocket && Main.rand.NextBool(2))))
             {
                 return false;
             }
@@ -220,7 +242,7 @@ namespace CheddarMod
 
         public override void NPCLoot(NPC npc)
         {
-            if (npc.type == NPCID.KingSlime && Main.rand.Next(5) == 0)
+            if (npc.type == NPCID.KingSlime && Main.rand.NextBool(5))
             {
                 Item.NewItem(npc.getRect(), mod.ItemType("RadiantOoze"));
             }
@@ -229,7 +251,7 @@ namespace CheddarMod
             {
                 Item.NewItem(npc.getRect(), mod.ItemType("WornEmblem"));
             }
-            else if (npc.type == NPCID.EyeofCthulhu && Main.rand.Next(5) == 0)
+            else if (npc.type == NPCID.EyeofCthulhu && Main.rand.NextBool(5))
             {
                 Item.NewItem(npc.getRect(), mod.ItemType("EngravedLens"));
             }
@@ -246,16 +268,26 @@ namespace CheddarMod
                  || npc.type == NPCID.LunarTowerStardust
                  || npc.type == NPCID.LunarTowerNebula
                  || npc.type == NPCID.LunarTowerVortex)
-                && Main.rand.Next(npc.type == NPCID.CultistBoss ? 10 : 20) == 0)
+                && Main.rand.NextBool(npc.type == NPCID.CultistBoss ? 10 : 20))
             {
                 Item.NewItem(npc.getRect(), mod.ItemType("CosmicSeal"));
             }
             // The set of enemies from StardustWormHead to VortexSoldier is a continuous set of Lunar Events enemies
             // BUG: One of the pillars is in this set, but whatever
-            else if (Main.rand.Next(500) == 0 && npc.type >= NPCID.StardustWormHead && npc.type <= NPCID.VortexSoldier)
+            else if (Main.rand.NextBool(500) && npc.type >= NPCID.StardustWormHead && npc.type <= NPCID.VortexSoldier)
             {
                 Item.NewItem(npc.getRect(), mod.ItemType("CosmicSeal"));
             }
         }
+    }
+
+    public class CheddarModConfig : ModConfig
+    {
+        public override ConfigScope Mode => ConfigScope.ServerSide;
+
+        [Label("Glass Omega removes mana consumption")]
+        [Tooltip("Toggle whether or not the Glass Omega item's effect will remove mana consumption.")]
+        [DefaultValue(false)]
+        public bool GlassOmegaMana { get; set; }
     }
 }

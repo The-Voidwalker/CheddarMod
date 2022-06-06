@@ -3,6 +3,8 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
+using static Terraria.ModLoader.ModContent;
 
 namespace CheddarMod
 {
@@ -30,6 +32,25 @@ namespace CheddarMod
         public bool coinDefense = false;
         public int grabBoost = 0;
         public float resistance = 0f;
+        public bool silverWings = false;
+        public bool omega = false;
+
+        public override TagCompound Save()
+        {
+            return new TagCompound
+            {
+                { "wings", silverWings },
+                { "flyte", flyte },
+                { "omega", omega }
+            };
+        }
+
+        public override void Load(TagCompound tag)
+        {
+            silverWings = tag.GetBool("wings");
+            flyte = tag.GetBool("flyte");
+            omega = tag.GetBool("omega");
+        }
 
         public override void ResetEffects()
         {
@@ -39,7 +60,6 @@ namespace CheddarMod
             stuff = false;
             hero = false;
             trueHero = false;
-            flyte = false;
             scope = false;
             potionSaver = false;
             healBeforeDeath = false;
@@ -68,23 +88,43 @@ namespace CheddarMod
             if (flyte)
             {
                 player.maxFallSpeed += 5f;
+                player.noFallDmg = true;
             }
             else if (yeet)
             {
                 player.maxFallSpeed += 3f;
             }
+            if (silverWings)
+            {
+                player.noFallDmg = true;
+            }
+
+            if (player.channel && player.inventory[player.selectedItem].netID == mod.ItemType("YeetForce") ||
+                player.inventory[player.selectedItem].netID == mod.ItemType("Flyte"))
+            {
+                player.maxFallSpeed = 1000;
+                if ((Main.MouseWorld - player.Center).Length() < 40)
+                {
+                    player.gravity = 0;
+                }
+            }
         }
 
         public override void PostUpdate()
         {
+            if (flyte)
+            {
+                if (player.wingTime < 10f)
+                {
+                    player.wingTime += 200f;
+                }
+            }
+
             if (yeet && !player.jumpAgainCloud)
             {
                 player.jumpAgainCloud = true;
             }
-            if (flyte && player.wingTime < 10f)
-            {
-                player.wingTime += 200f;
-            }
+
             if ((player.inventory[player.selectedItem].useAmmo == AmmoID.Bullet
                  || player.inventory[player.selectedItem].useAmmo == AmmoID.CandyCorn
                  || player.inventory[player.selectedItem].useAmmo == AmmoID.Stake
@@ -113,6 +153,18 @@ namespace CheddarMod
                         npc.AddBuff(mod.BuffType("MidasCurse"), 120);
                     }
                 }
+            }
+        }
+
+        public override void PostUpdateEquips()
+        {
+            if (silverWings)
+            {
+                player.doubleJumpUnicorn = true;
+            }
+            if (omega && GetInstance<CheddarModConfig>().GlassOmegaMana)
+            {
+                player.manaCost = 0;
             }
         }
 
@@ -163,7 +215,7 @@ namespace CheddarMod
             double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore,
             ref PlayerDeathReason damageSource)
         {
-            if (healBeforeDeath && Main.rand.Next(10) == 0)
+            if (healBeforeDeath && Main.rand.NextBool(10))
             {
                 if (!sickFromSeal)
                 {
@@ -171,11 +223,11 @@ namespace CheddarMod
                     player.potionDelay = 0;
                 }
                 player.QuickHeal();
-                sickFromSeal = true;
                 if (player.statLife <= 0)
                 {
                     return true;
                 }
+                sickFromSeal = true;
                 return false;
             }
             return true;
@@ -192,7 +244,7 @@ namespace CheddarMod
                 crit = false;
             }
 
-            if (damage > 1 && coinDefense && Main.rand.Next(5) == 0)
+            if (damage > 1 && coinDefense && Main.rand.NextBool(5))
             {
                 float r = Main.rand.NextFloat();
                 int num = Main.rand.Next(11);

@@ -9,7 +9,7 @@ namespace CheddarMod.Items
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Ammomancer's Pouch");
-            Tooltip.SetDefault("Reduced chance to consume ammunition\nProvides a small boost to ranged abilities.");
+            Tooltip.SetDefault("Reduced chance to consume ammunition\nBoosts ranged damage and crit chance by 5%.");
         }
 
         public override void SetDefaults()
