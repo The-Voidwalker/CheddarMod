@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,35 +11,35 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Holy Spork");
             Tooltip.SetDefault("Increases armor penetration by 10.\nReduces potion cooldown.\nIncreases invincibility time when taking damage, and stars rain down while invincibility is active.\n\"All Hail The Spork!\"");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 12;
-            item.height = 38;
-            item.value = 600000;
-            item.rare = ItemRarityID.Lime;
-            item.lifeRegen = 2;
-            item.accessory = true;
+            Item.width = 12;
+            Item.height = 38;
+            Item.value = 600000;
+            Item.rare = ItemRarityID.Lime;
+            Item.lifeRegen = 2;
+            Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.armorPenetration += 10;
+            player.GetArmorPenetration(DamageClass.Generic) += 10;
             player.pStone = true;
-            player.starCloak = true;
+            player.starCloakItem = Item;  // TODO: help
             player.longInvince = true;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.StarVeil);
             recipe.AddIngredient(ItemID.CharmofMyths);
             recipe.AddIngredient(ItemID.SharkToothNecklace);
             recipe.AddTile(TileID.TinkerersWorkbench);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

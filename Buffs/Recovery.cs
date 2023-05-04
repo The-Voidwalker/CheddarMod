@@ -7,7 +7,7 @@ namespace CheddarMod.Buffs
     {
         public int counter = 0;
 
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Recovery");
             Description.SetDefault("Recovering 1% max hp every 2 seconds");

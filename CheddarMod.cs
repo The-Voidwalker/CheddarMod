@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.IO;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
@@ -26,6 +27,46 @@ namespace CheddarMod
         public override void HandlePacket(BinaryReader reader, int whoAmI)
         {
             NetHelper.HandlePacket(reader, whoAmI);
+        }
+    }
+
+    public class CheddarWorld : ModSystem
+    {
+        // Don't need/want to save this
+        public static bool timeWheel = false;
+
+        public override void OnWorldLoad()/* tModPorter Suggestion: Also override OnWorldUnload, and mirror your worldgen-sensitive data initialization in PreWorldGen */
+        {
+            timeWheel = false;
+        }
+
+        public override void NetSend(BinaryWriter writer)
+        {
+            writer.Write(timeWheel);
+        }
+
+        public override void NetReceive(BinaryReader reader)
+        {
+            timeWheel = reader.ReadBoolean();
+        }
+
+        public override void PreUpdateWorld()
+        {
+            // TODO This effect pauses briefly at 4:30am in multiplayer, why?
+            if (Main.sundialCooldown == 8)
+            {
+                return; // Regular sundial effect in use, don't do anything
+            }
+
+            if (timeWheel)
+            {
+                Main.dayRate = 60;
+                Main.fastForwardTime = true;
+            }
+            else
+            {
+                Main.fastForwardTime = false; // dayRate should be reset automatically by this
+            }
         }
 
         public override void AddRecipeGroups()
@@ -60,46 +101,6 @@ namespace CheddarMod
         }
     }
 
-    public class CheddarWorld : ModWorld
-    {
-        // Don't need/want to save this
-        public static bool timeWheel = false;
-
-        public override void Initialize()
-        {
-            timeWheel = false;
-        }
-
-        public override void NetSend(BinaryWriter writer)
-        {
-            writer.Write(timeWheel);
-        }
-
-        public override void NetReceive(BinaryReader reader)
-        {
-            timeWheel = reader.ReadBoolean();
-        }
-
-        public override void PreUpdate()
-        {
-            // TODO This effect pauses briefly at 4:30am in multiplayer, why?
-            if (Main.sundialCooldown == 8)
-            {
-                return; // Regular sundial effect in use, don't do anything
-            }
-
-            if (timeWheel)
-            {
-                Main.dayRate = 60;
-                Main.fastForwardTime = true;
-            }
-            else
-            {
-                Main.fastForwardTime = false; // dayRate should be reset automatically by this
-            }
-        }
-    }
-
     public class CheddarItem : GlobalItem
     {
         bool RealAutoReuseValue = false;
@@ -107,9 +108,9 @@ namespace CheddarMod
         int oldDuration = 0;
 
         public override bool InstancePerEntity => true;
-        public override bool CloneNewInstances => true;
+        protected override bool CloneNewInstances => true;
 
-        public override bool ConsumeAmmo(Item item, Player player)
+        public override bool CanConsumeAmmo(Item weapon, Item ammo, Player player)
         {
             CheddarModPlayer modPlayer = player.GetModPlayer<CheddarModPlayer>();
             return !modPlayer.tome && !modPlayer.stuff && !modPlayer.omega && (!modPlayer.ammomancer || !Main.rand.NextBool(2));
@@ -122,7 +123,7 @@ namespace CheddarMod
             {
                 return false;
             }
-            else if (item.thrown && (modPlayer.scroll || (modPlayer.pocket && Main.rand.NextBool(2))))
+            else if (item.CountsAsClass(DamageClass.Throwing) && (modPlayer.scroll || (modPlayer.pocket && Main.rand.NextBool(2))))
             {
                 return false;
             }
@@ -136,7 +137,7 @@ namespace CheddarMod
         public override bool CanUseItem(Item item, Player player)
         {
             CheddarModPlayer modPlayer = player.GetModPlayer<CheddarModPlayer>();
-            if ((modPlayer.trueHero && item.damage > 0) || (item.melee && modPlayer.hero))
+            if ((modPlayer.trueHero && item.damage > 0) || (item.CountsAsClass(DamageClass.Melee) && modPlayer.hero))
             {
                 if (!FakeAutoReuse)
                 {
@@ -179,7 +180,7 @@ namespace CheddarMod
         {
             CheddarModPlayer modPlayer = Main.player[projectile.owner].GetModPlayer<CheddarModPlayer>();
             if ((projectile.aiStyle == 19 || projectile.aiStyle == 699)
-                && Main.player[projectile.owner].HeldItem.melee
+                && Main.player[projectile.owner].HeldItem.CountsAsClass(DamageClass.Melee)
                 && (modPlayer.hero || modPlayer.trueHero)
                 && projectile.timeLeft > Main.player[projectile.owner].itemAnimation)
             {
@@ -237,7 +238,7 @@ namespace CheddarMod
                         num = Main.rand.Next(3, 13);
                     }
 
-                    Item.NewItem(npc.getRect(), coin, num);
+                    Item.NewItem(npc.GetSource_DropAsItem(), npc.getRect(), coin, num);
                     coinCount = 0;
                 }
             }
@@ -247,43 +248,42 @@ namespace CheddarMod
             }
         }
 
-        public override void NPCLoot(NPC npc)
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
-            if (npc.type == NPCID.KingSlime && Main.rand.NextBool(5))
+            switch (npc.type)
             {
-                Item.NewItem(npc.getRect(), mod.ItemType("RadiantOoze"));
-            }
-            else if ((((npc.type == NPCID.EaterofWorldsHead || npc.type == NPCID.EaterofWorldsBody || npc.type == NPCID.EaterofWorldsTail) && npc.boss)
-                || npc.type == NPCID.BrainofCthulhu) && Main.rand.NextFloat() < 0.15f)
-            {
-                Item.NewItem(npc.getRect(), mod.ItemType("WornEmblem"));
-            }
-            else if (npc.type == NPCID.EyeofCthulhu && Main.rand.NextBool(5))
-            {
-                Item.NewItem(npc.getRect(), mod.ItemType("EngravedLens"));
-            }
-            else if (npc.type == NPCID.QueenBee && Main.rand.NextFloat() < 0.15f)
-            {
-                Item.NewItem(npc.getRect(), mod.ItemType("StarRose"));
-            }
-            else if (npc.type == NPCID.SkeletronHead && Main.rand.NextFloat() < 0.15f)
-            {
-                Item.NewItem(npc.getRect(), mod.ItemType("CarvedBone"));
-            }
-            else if ((npc.type == NPCID.CultistBoss
-                 || npc.type == NPCID.LunarTowerSolar
-                 || npc.type == NPCID.LunarTowerStardust
-                 || npc.type == NPCID.LunarTowerNebula
-                 || npc.type == NPCID.LunarTowerVortex)
-                && Main.rand.NextBool(npc.type == NPCID.CultistBoss ? 10 : 20))
-            {
-                Item.NewItem(npc.getRect(), mod.ItemType("CosmicSeal"));
+                case NPCID.KingSlime:
+                    npcLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("RadiantOoze").Type, 5));
+                    break;
+                case NPCID.EaterofWorldsBody:
+                case NPCID.EaterofWorldsHead:
+                case NPCID.EaterofWorldsTail:
+                case NPCID.BrainofCthulhu:
+                    npcLoot.Add(ItemDropRule.ByCondition(new Conditions.LegacyHack_IsABoss(), Mod.Find<ModItem>("WornEmblem").Type, 20, 1, 1, 3));
+                    break;
+                case NPCID.EyeofCthulhu:
+                    npcLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("EngravedLens").Type, 5));
+                    break;
+                case NPCID.QueenBee:
+                    npcLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("StarRose").Type, 6));
+                    break;
+                case NPCID.SkeletronHead:
+                    npcLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("CarvedBone").Type, 6));
+                    break;
+                case NPCID.CultistBoss:
+                    npcLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("CosmicSeal").Type, 10));
+                    break;
+                case NPCID.LunarTowerNebula:
+                case NPCID.LunarTowerSolar:
+                case NPCID.LunarTowerStardust:
+                case NPCID.LunarTowerVortex:
+                    npcLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("CosmicSeal").Type, 20));
+                    break;
             }
             // The set of enemies from StardustWormHead to VortexSoldier is a continuous set of Lunar Events enemies
-            // BUG: One of the pillars is in this set, but whatever
-            else if (Main.rand.NextBool(500) && npc.type >= NPCID.StardustWormHead && npc.type <= NPCID.VortexSoldier)
+            if (npc.type >= NPCID.StardustWormHead && npc.type <= NPCID.VortexSoldier && npc.type != NPCID.LunarTowerVortex)
             {
-                Item.NewItem(npc.getRect(), mod.ItemType("CosmicSeal"));
+                npcLoot.Add(ItemDropRule.Common(Mod.Find<ModItem>("CosmicSeal").Type, 500));
             }
         }
     }

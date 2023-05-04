@@ -1,4 +1,6 @@
+using System;
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,25 +12,26 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Wheel of Time");
             Tooltip.SetDefault("Holds power over time itself.\nLeft click to toggle faster time flow.\nRight click disables this effect.");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.rare = ItemRarityID.Lime;
-            item.value = 200000;
-            item.width = 20;
-            item.height = 20;
-            item.useAnimation = 45;
-            item.useTime = 45;
-            item.useStyle = ItemUseStyleID.HoldingUp;
+            Item.rare = ItemRarityID.Lime;
+            Item.value = 200000;
+            Item.width = 20;
+            Item.height = 20;
+            Item.useAnimation = 45;
+            Item.useTime = 45;
+            Item.useStyle = ItemUseStyleID.HoldUp;
         }
 
-        public override bool Autoload(ref string name)
+        public override bool IsLoadingEnabled(Mod mod)/* tModPorter Suggestion: If you return false for the purposes of manual loading, use the [Autoload(false)] attribute on your class instead */
         {
             return true;
         }
 
-        public override bool UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             if (player.altFunctionUse == 2)
             {

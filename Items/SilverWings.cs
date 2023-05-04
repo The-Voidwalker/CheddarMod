@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -15,14 +17,15 @@ namespace CheddarMod.Items
             DisplayName.SetDefault("Silver Wings");
             Tooltip.SetDefault("These delicate silver wings can grant immunity to fall damage, and give an extra jump without using an accessory.\n" +
                 "Right click the charm in your inventory to gain its effect.");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 10;
-            item.height = 10;
-            item.rare = ItemRarityID.LightRed;
-            item.value = 777000;
+            Item.width = 10;
+            Item.height = 10;
+            Item.rare = ItemRarityID.LightRed;
+            Item.value = 777000;
         }
 
         public override bool ConsumeItem(Player player)
@@ -45,7 +48,7 @@ namespace CheddarMod.Items
         {
             if (active)
             {
-                Texture2D texture = Main.itemTexture[item.type];
+                Texture2D texture = TextureAssets.Item[Item.type].Value;
                 for (int i = 0; i < 8; i++)
                 {
                     Vector2 offsetPositon = Vector2.UnitY.RotatedBy(MathHelper.PiOver2 * i) * 2;
@@ -62,13 +65,12 @@ namespace CheddarMod.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddRecipeGroup("Cheddar:SilverBars", 7);
             recipe.AddIngredient(ItemID.Cloud, 7);
             recipe.AddIngredient(ItemID.Feather, 7);
             recipe.AddTile(TileID.TinkerersWorkbench);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

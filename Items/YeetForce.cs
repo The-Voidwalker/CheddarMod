@@ -1,5 +1,7 @@
 using Microsoft.Xna.Framework;
+using System;
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -11,23 +13,24 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Golden Arrow");
             Tooltip.SetDefault("Hold left click with this charm to fly towards your mouse.");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 9;
-            item.height = 25;
-            item.value = 500000;
-            item.rare = ItemRarityID.Yellow;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.channel = true;
-            item.useTime = 1;
-            item.useAnimation = 1;
-            item.autoReuse = true;
-            item.useTurn = true;
+            Item.width = 9;
+            Item.height = 25;
+            Item.value = 500000;
+            Item.rare = ItemRarityID.Yellow;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.channel = true;
+            Item.useTime = 1;
+            Item.useAnimation = 1;
+            Item.autoReuse = true;
+            Item.useTurn = true;
         }
 
-        public override bool UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             Vector2 mouse = Main.MouseWorld;
             Vector2 direction = mouse - player.Center;
@@ -47,13 +50,12 @@ namespace CheddarMod.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddRecipeGroup("Cheddar:GoldBars", 7);
             recipe.AddIngredient(ItemID.SoulofLight, 7);
             recipe.AddIngredient(ItemID.SoulofFlight, 7);
             recipe.AddTile(TileID.TinkerersWorkbench);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,15 +11,16 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Boot.");
             Tooltip.SetDefault("\"Ya got a Boot.\"\nA little greater than the sum of its parts");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 19;
-            item.value = 600000;
-            item.rare = ItemRarityID.Cyan;
-            item.accessory = true;
+            Item.width = 30;
+            Item.height = 19;
+            Item.value = 600000;
+            Item.rare = ItemRarityID.Cyan;
+            Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -36,15 +38,14 @@ namespace CheddarMod.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.FrostsparkBoots);
             recipe.AddIngredient(ItemID.LavaWaders);
             recipe.AddIngredient(ItemID.Flipper);
             recipe.AddIngredient(ItemID.SoulofLight, 3);
             recipe.AddIngredient(ItemID.SoulofNight, 3);
             recipe.AddTile(TileID.MythrilAnvil);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

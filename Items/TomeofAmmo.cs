@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,21 +11,22 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Tome of Ammo");
             Tooltip.SetDefault("This tome contains instructions for conjuring ammunition from nothing\nIncreases ranged stats by 15%, and you preserve all ammo");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 25;
-            item.height = 25;
-            item.rare = ItemRarityID.Lime;
-            item.value = 20000;
-            item.accessory = true;
+            Item.width = 25;
+            Item.height = 25;
+            Item.rare = ItemRarityID.Lime;
+            Item.value = 20000;
+            Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.rangedDamage += 0.15f;
-            player.rangedCrit += 15;
+            player.GetDamage(DamageClass.Ranged) += 0.15f;
+            player.GetCritChance(DamageClass.Ranged) += 15;
 
             CheddarModPlayer modPlayer = player.GetModPlayer<CheddarModPlayer>();
             modPlayer.tome = true;
@@ -32,13 +34,12 @@ namespace CheddarMod.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod, "AmmomancerPouch");
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(Mod, "AmmomancerPouch");
             recipe.AddIngredient(ItemID.EndlessQuiver);
             recipe.AddIngredient(ItemID.EndlessMusketPouch);
             recipe.AddTile(TileID.CrystalBall);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

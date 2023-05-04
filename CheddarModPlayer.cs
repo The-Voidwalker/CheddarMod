@@ -35,17 +35,14 @@ namespace CheddarMod
         public bool silverWings = false;
         public bool omega = false;
 
-        public override TagCompound Save()
+        public override void SaveData(TagCompound tag)
         {
-            return new TagCompound
-            {
-                { "wings", silverWings },
-                { "flyte", flyte },
-                { "omega", omega }
-            };
+            tag.Set("wings", silverWings, true);
+            tag.Set("flyte", flyte, true);
+            tag.Set("omega", omega, true);
         }
 
-        public override void Load(TagCompound tag)
+        public override void LoadData(TagCompound tag)
         {
             silverWings = tag.GetBool("wings");
             flyte = tag.GetBool("flyte");
@@ -87,25 +84,25 @@ namespace CheddarMod
         {
             if (flyte)
             {
-                player.maxFallSpeed += 5f;
-                player.noFallDmg = true;
+                Player.maxFallSpeed += 5f;
+                Player.noFallDmg = true;
             }
             else if (yeet)
             {
-                player.maxFallSpeed += 3f;
+                Player.maxFallSpeed += 3f;
             }
             if (silverWings)
             {
-                player.noFallDmg = true;
+                Player.noFallDmg = true;
             }
 
-            if (player.channel && player.inventory[player.selectedItem].netID == mod.ItemType("YeetForce") ||
-                player.inventory[player.selectedItem].netID == mod.ItemType("Flyte"))
+            if (Player.channel && Player.inventory[Player.selectedItem].netID == Mod.Find<ModItem>("YeetForce").Type ||
+                Player.inventory[Player.selectedItem].netID == Mod.Find<ModItem>("Flyte").Type)
             {
-                player.maxFallSpeed = 1000;
-                if ((Main.MouseWorld - player.Center).Length() < 40)
+                Player.maxFallSpeed = 1000;
+                if ((Main.MouseWorld - Player.Center).Length() < 40)
                 {
-                    player.gravity = 0;
+                    Player.gravity = 0;
                 }
             }
         }
@@ -114,31 +111,31 @@ namespace CheddarMod
         {
             if (flyte)
             {
-                if (player.wingTime < 10f)
+                if (Player.wingTime < 10f)
                 {
-                    player.wingTime += 200f;
+                    Player.wingTime += 200f;
                 }
             }
 
-            if (yeet && !player.jumpAgainCloud)
+            if (yeet && !Player.canJumpAgain_Cloud)
             {
-                player.jumpAgainCloud = true;
+                Player.canJumpAgain_Cloud = true;
             }
 
-            if ((player.inventory[player.selectedItem].useAmmo == AmmoID.Bullet
-                 || player.inventory[player.selectedItem].useAmmo == AmmoID.CandyCorn
-                 || player.inventory[player.selectedItem].useAmmo == AmmoID.Stake
-                 || player.inventory[player.selectedItem].useAmmo == AmmoID.Gel)
-                && scope && player.altFunctionUse == 0)
+            if ((Player.inventory[Player.selectedItem].useAmmo == AmmoID.Bullet
+                 || Player.inventory[Player.selectedItem].useAmmo == AmmoID.CandyCorn
+                 || Player.inventory[Player.selectedItem].useAmmo == AmmoID.Stake
+                 || Player.inventory[Player.selectedItem].useAmmo == AmmoID.Gel)
+                && scope && Player.altFunctionUse == 0)
             {
-                player.scope = true;
+                Player.scope = true;
             }
-            if (sickFromSeal && player.potionDelay == 0)
+            if (sickFromSeal && Player.potionDelay == 0)
             {
                 sickFromSeal = false;
             }
 
-            if (midasCurse && player.whoAmI == Main.myPlayer)
+            if (midasCurse && Player.whoAmI == Main.myPlayer)
             {
                 for (int i = 0; i < 200; i++)
                 {
@@ -147,10 +144,10 @@ namespace CheddarMod
                         && !npc.friendly
                         && npc.damage > 0
                         && !npc.dontTakeDamage
-                        && !npc.buffImmune[mod.BuffType("MidasCurse")]
-                        && Vector2.Distance(player.Center, npc.Center) <= 400f)
+                        && !npc.buffImmune[Mod.Find<ModBuff>("MidasCurse").Type]
+                        && Vector2.Distance(Player.Center, npc.Center) <= 400f)
                     {
-                        npc.AddBuff(mod.BuffType("MidasCurse"), 120);
+                        npc.AddBuff(Mod.Find<ModBuff>("MidasCurse").Type, 120);
                     }
                 }
             }
@@ -160,11 +157,11 @@ namespace CheddarMod
         {
             if (silverWings)
             {
-                player.doubleJumpUnicorn = true;
+                Player.hasJumpOption_Unicorn = true;
             }
             if (omega && GetInstance<CheddarModConfig>().GlassOmegaMana)
             {
-                player.manaCost = 0;
+                Player.manaCost = 0;
             }
         }
 
@@ -172,12 +169,12 @@ namespace CheddarMod
         {
             if (coinDecay)
             {
-                if (player.lifeRegen > 0)
+                if (Player.lifeRegen > 0)
                 {
-                    player.lifeRegen = 0;
+                    Player.lifeRegen = 0;
                 }
-                player.lifeRegenTime = 0;
-                player.lifeRegen -= 20;
+                Player.lifeRegenTime = 0;
+                Player.lifeRegen -= 20;
 
                 coinCount++;
                 if (coinCount > 120)
@@ -201,7 +198,7 @@ namespace CheddarMod
                         num = Main.rand.Next(3, 13);
                     }
 
-                    player.QuickSpawnItem(coin, num);
+                    Player.QuickSpawnItem(Player.GetSource_Loot(), coin, num);
                     coinCount = 0;
                 }
             }
@@ -219,11 +216,11 @@ namespace CheddarMod
             {
                 if (!sickFromSeal)
                 {
-                    player.ClearBuff(BuffID.PotionSickness);
-                    player.potionDelay = 0;
+                    Player.ClearBuff(BuffID.PotionSickness);
+                    Player.potionDelay = 0;
                 }
-                player.QuickHeal();
-                if (player.statLife <= 0)
+                Player.QuickHeal();
+                if (Player.statLife <= 0)
                 {
                     return true;
                 }
@@ -233,9 +230,7 @@ namespace CheddarMod
             return true;
         }
 
-        public override bool PreHurt(
-            bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage,
-            ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)
         {
             damage = (int)(damage * (1.001f + resistance));
 
@@ -278,7 +273,7 @@ namespace CheddarMod
 
                 int reduction = (int)(damage * mult);
                 damage -= reduction;
-                player.QuickSpawnItem(coin, coins);
+                Player.QuickSpawnItem(Player.GetSource_Loot(), coin, coins);
             }
             return true;
         }

@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,32 +11,32 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Arcane Tablet");
             Tooltip.SetDefault("Grants power over others, provided that you can summon them\nMax minions increased by 4\nMinion damage increased by 15%");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 25;
-            item.height = 25;
-            item.rare = ItemRarityID.Yellow;
-            item.value = 140000;
-            item.accessory = true;
+            Item.width = 25;
+            Item.height = 25;
+            Item.rare = ItemRarityID.Yellow;
+            Item.value = 140000;
+            Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.maxMinions += 4;
-            player.minionDamage += 0.15f;
-            player.minionKB += 1;
+            player.GetDamage(DamageClass.Summon) += 0.15f;
+            player.GetKnockback(DamageClass.Summon).Base += 1;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod, "CarvedBone");
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(Mod, "CarvedBone");
             recipe.AddIngredient(ItemID.SoulofNight, 9);
             recipe.AddTile(TileID.CrystalBall);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

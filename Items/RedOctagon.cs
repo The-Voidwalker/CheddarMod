@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,16 +11,17 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Red Octagon");
             Tooltip.SetDefault("Provides immunity to knockback and a large set of debuffs\nReduces damage taken by 15%\n\"Though the symbols on it have faded, its stopping power is still immense.\"");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 30;
-            item.value = 300000;
-            item.rare = ItemRarityID.Yellow;
-            item.defense = 8;
-            item.accessory = true;
+            Item.width = 30;
+            Item.height = 30;
+            Item.value = 300000;
+            Item.rare = ItemRarityID.Yellow;
+            Item.defense = 8;
+            Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -43,13 +45,12 @@ namespace CheddarMod.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.AnkhShield);
             recipe.AddIngredient(ItemID.FrozenTurtleShell);
             recipe.AddIngredient(ItemID.PocketMirror);
             recipe.AddTile(TileID.TinkerersWorkbench);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

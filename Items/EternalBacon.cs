@@ -1,3 +1,5 @@
+using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,31 +11,31 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Eternal Bacon");
             Tooltip.SetDefault("Praise the ETERNAL BACON!\nALL PRAISE!");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.UseSound = SoundID.Item2;
-            item.useStyle = ItemUseStyleID.EatingUsing;
-            item.useTurn = true;
-            item.useAnimation = 17;
-            item.useTime = 17;
+            Item.UseSound = SoundID.Item2;
+            Item.useStyle = ItemUseStyleID.EatFood;
+            Item.useTurn = true;
+            Item.useAnimation = 17;
+            Item.useTime = 17;
             // item.maxStack = 1;
-            item.consumable = false;
-            item.width = 10;
-            item.height = 10;
-            item.buffType = 26;
-            item.buffTime = 216000;
-            item.rare = ItemRarityID.Green;
-            item.value = 10000;
+            Item.consumable = false;
+            Item.width = 10;
+            Item.height = 10;
+            Item.buffType = 26;
+            Item.buffTime = 216000;
+            Item.rare = ItemRarityID.Green;
+            Item.value = 10000;
         }
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.Bacon, 30);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

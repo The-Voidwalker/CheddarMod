@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,22 +11,23 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Rosy Star");
             Tooltip.SetDefault("This beautiful red crystal massively reduces mana costs in exchange for damage.");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 22;
-            item.height = 24;
-            item.value = 100000;
-            item.rare = ItemRarityID.Pink;
-            item.accessory = true;
+            Item.width = 22;
+            Item.height = 24;
+            Item.value = 100000;
+            Item.rare = ItemRarityID.Pink;
+            Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.manaCost -= 0.5f;
-            player.magicDamage -= 0.1f;
-            player.magicCrit += 5;
+            player.GetDamage(DamageClass.Magic) -= 0.1f;
+            player.GetCritChance(DamageClass.Magic) += 5;
         }
     }
 }

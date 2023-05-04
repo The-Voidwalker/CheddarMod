@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,15 +11,16 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Stone of Potency");
             Tooltip.SetDefault("Increases health regeneration by 1\nBoosts healing potion effectiveness by 20%\nIncreases potion duration by 35%");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.height = 20;
-            item.width = 20;
-            item.rare = ItemRarityID.Pink;
-            item.value = 30000;
-            item.accessory = true;
+            Item.height = 20;
+            Item.width = 20;
+            Item.rare = ItemRarityID.Pink;
+            Item.value = 30000;
+            Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -31,13 +33,12 @@ namespace CheddarMod.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod, "Regenerator");
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(Mod, "Regenerator");
             recipe.AddIngredient(ItemID.SoulofLight, 2);
             recipe.AddRecipeGroup("Cheddar:CobaltOres", 3);
             recipe.AddTile(TileID.MythrilAnvil);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

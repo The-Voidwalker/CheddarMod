@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,15 +11,16 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Star Threads");
             Tooltip.SetDefault("\"Run among the stars!\"");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 30;
-            item.height = 18;
-            item.value = 1000000;
-            item.rare = ItemRarityID.Purple;
-            item.accessory = true;
+            Item.width = 30;
+            Item.height = 18;
+            Item.value = 1000000;
+            Item.rare = ItemRarityID.Purple;
+            Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -34,11 +36,11 @@ namespace CheddarMod.Items
             player.rocketBoots = 3;
             player.runAcceleration *= 2f;
 
-            player.doubleJumpCloud = true;
-            player.doubleJumpSandstorm = true;
-            player.doubleJumpBlizzard = true;
-            player.doubleJumpFart = true;
-            player.doubleJumpSail = true;
+            player.hasJumpOption_Cloud = true;
+            player.hasJumpOption_Sandstorm = true;
+            player.hasJumpOption_Blizzard = true;
+            player.hasJumpOption_Fart = true;
+            player.hasJumpOption_Sail = true;
             player.jumpBoost = true;
             player.noFallDmg = true;
             player.autoJump = true;
@@ -50,8 +52,8 @@ namespace CheddarMod.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod, "Boot");
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(Mod, "Boot");
             recipe.AddIngredient(ItemID.SoulofFlight, 7);
             recipe.AddIngredient(ItemID.BundleofBalloons);
             recipe.AddIngredient(ItemID.FrogLeg);
@@ -59,8 +61,7 @@ namespace CheddarMod.Items
             recipe.AddIngredient(ItemID.SoulofSight);
             recipe.AddIngredient(ItemID.SoulofFright);
             recipe.AddTile(TileID.TinkerersWorkbench);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

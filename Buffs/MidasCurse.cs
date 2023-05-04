@@ -5,7 +5,7 @@ namespace CheddarMod.Buffs
 {
     public class MidasCurse : ModBuff
     {
-        public override void SetDefaults()
+        public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Midas' Curse");
             Description.SetDefault("You are turning into coins!");

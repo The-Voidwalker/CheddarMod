@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,21 +11,22 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Carved Bone");
             Tooltip.SetDefault("This bone is carven with mystic runes.\nIncreases maximum minions by 3, but reduces minion damage by 20%");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 25;
-            item.height = 25;
-            item.rare = ItemRarityID.LightRed;
-            item.value = 30000;
-            item.accessory = true;
+            Item.width = 25;
+            Item.height = 25;
+            Item.rare = ItemRarityID.LightRed;
+            Item.value = 30000;
+            Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.maxMinions += 3;
-            player.minionDamage -= 0.2f;
+            player.GetDamage(DamageClass.Summon) -= 0.2f;
         }
     }
 }

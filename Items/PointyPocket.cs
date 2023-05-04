@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,21 +11,22 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Pocket of Pointy Things");
             Tooltip.SetDefault("Provides a boost to throwing abilities\nThrown items consumed less.");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 40;
-            item.height = 22;
-            item.value = 50000;
-            item.rare = ItemRarityID.Pink;
-            item.accessory = true;
+            Item.width = 40;
+            Item.height = 22;
+            Item.value = 50000;
+            Item.rare = ItemRarityID.Pink;
+            Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.thrownDamage += 0.05f;
-            player.thrownCrit += 5;
+            player.GetDamage(DamageClass.Throwing) += 0.05f;
+            player.GetCritChance(DamageClass.Throwing) += 5;
 
             CheddarModPlayer modPlayer = player.GetModPlayer<CheddarModPlayer>();
             modPlayer.pocket = true;
@@ -32,15 +34,14 @@ namespace CheddarMod.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod, "RadiantOoze");
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(Mod, "RadiantOoze");
             recipe.AddIngredient(ItemID.ThrowingKnife, 100);
             recipe.AddIngredient(ItemID.Shuriken, 100);
             recipe.AddIngredient(ItemID.Leather, 5);
             recipe.AddIngredient(ItemID.Gel, 25);
             recipe.AddTile(TileID.TinkerersWorkbench);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

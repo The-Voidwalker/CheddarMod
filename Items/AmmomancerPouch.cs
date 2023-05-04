@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,21 +11,22 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Ammomancer's Pouch");
             Tooltip.SetDefault("Reduced chance to consume ammunition\nBoosts ranged damage and crit chance by 5%.");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 29;
-            item.height = 36;
-            item.value = 50000;
-            item.rare = ItemRarityID.Pink;
-            item.accessory = true;
+            Item.width = 29;
+            Item.height = 36;
+            Item.value = 50000;
+            Item.rare = ItemRarityID.Pink;
+            Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.rangedDamage += 0.05f;
-            player.rangedCrit += 5;
+            player.GetDamage(DamageClass.Ranged) += 0.05f;
+            player.GetCritChance(DamageClass.Ranged) += 5;
 
             CheddarModPlayer modPlayer = player.GetModPlayer<CheddarModPlayer>();
             modPlayer.ammomancer = true;
@@ -32,14 +34,13 @@ namespace CheddarMod.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod, "EngravedLens");
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(Mod, "EngravedLens");
             recipe.AddIngredient(ItemID.WoodenArrow, 999);
             recipe.AddIngredient(ItemID.MusketBall, 999);
             recipe.AddIngredient(ItemID.Lens, 2);
             recipe.AddTile(TileID.TinkerersWorkbench);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

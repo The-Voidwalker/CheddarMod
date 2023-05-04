@@ -1,6 +1,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
+using Terraria.GameContent;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -9,30 +12,29 @@ namespace CheddarMod.Items
     public class Flyte : ModItem
     {
         private bool active = false;
-        
+
         public override void SetStaticDefaults()
         {
             DisplayName.SetDefault("Flyte");
-            Tooltip.SetDefault("Use this item to throw yourself toward your mouse.\n" +
-                "This reconstructed charm can be activated to grant infinite flight.\n" +
-                "Right click the charm in your inventory to gain its effect.");
+            Tooltip.SetDefault("Use this item to throw yourself toward your mouse.\nThis reconstructed charm can be activated to grant infinite flight.\nRight click the charm in your inventory to gain its effect.");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 26;
-            item.height = 38;
-            item.value = 1000000;
-            item.rare = 12;
-            item.useStyle = ItemUseStyleID.HoldingOut;
-            item.channel = true;
-            item.useTime = 1;
-            item.useAnimation = 1;
-            item.autoReuse = true;
-            item.useTurn = true;
+            Item.width = 26;
+            Item.height = 38;
+            Item.value = 1000000;
+            Item.rare = ItemRarityID.Purple;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.channel = true;
+            Item.useTime = 1;
+            Item.useAnimation = 1;
+            Item.autoReuse = true;
+            Item.useTurn = true;
         }
 
-        public override bool UseItem(Player player)
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
         {
             Vector2 mouse = Main.MouseWorld;
             Vector2 direction = mouse - player.Center;
@@ -70,7 +72,7 @@ namespace CheddarMod.Items
         {
             if (active)
             {
-                Texture2D texture = Main.itemTexture[item.type];
+                Texture2D texture = TextureAssets.Item[Item.type].Value;
                 for (int i = 0; i < 8; i++)
                 {
                     Vector2 offsetPositon = Vector2.UnitY.RotatedBy(MathHelper.PiOver2 * i) * 2;
@@ -87,15 +89,14 @@ namespace CheddarMod.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(mod, "YeetForce");
-            recipe.AddIngredient(mod, "SilverWings");
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(Mod, "YeetForce");
+            recipe.AddIngredient(Mod, "SilverWings");
             recipe.AddIngredient(ItemID.SoulofFright, 7);
             recipe.AddIngredient(ItemID.SoulofMight, 7);
             recipe.AddIngredient(ItemID.SoulofSight, 7);
             recipe.AddTile(TileID.TinkerersWorkbench);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

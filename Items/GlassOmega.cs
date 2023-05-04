@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -13,14 +15,15 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Glass Omega");
             Tooltip.SetDefault("Possesses strange power.");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 25;
-            item.height = 25;
-            item.rare = ItemRarityID.Purple;
-            item.value = 100000;
+            Item.width = 25;
+            Item.height = 25;
+            Item.rare = ItemRarityID.Purple;
+            Item.value = 100000;
         }
 
         public override bool ConsumeItem(Player player)
@@ -43,7 +46,7 @@ namespace CheddarMod.Items
         {
             if (active)
             {
-                Texture2D texture = Main.itemTexture[item.type];
+                Texture2D texture = TextureAssets.Item[Item.type].Value;
                 for (int i = 0; i < 8; i++)
                 {
                     Vector2 offsetPositon = Vector2.UnitY.RotatedBy(MathHelper.PiOver2 * i) * 2;
@@ -60,12 +63,11 @@ namespace CheddarMod.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.Glass, 10);
             recipe.AddRecipeGroup("Cheddar:GoldOres");
             recipe.AddTile(TileID.WorkBenches);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }

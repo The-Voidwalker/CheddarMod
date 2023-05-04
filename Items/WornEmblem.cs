@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,15 +11,16 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Worn Emblem");
             Tooltip.SetDefault("This worn emblem of an ancient hero still holds a fragment of it's power.\nAdds autoswing to all melee weapons at the cost of slower swings.");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.rare = ItemRarityID.LightRed;
-            item.value = 40000;
-            item.accessory = true;
+            Item.width = 20;
+            Item.height = 20;
+            Item.rare = ItemRarityID.LightRed;
+            Item.value = 40000;
+            Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -26,9 +28,9 @@ namespace CheddarMod.Items
             CheddarModPlayer modPlayer = player.GetModPlayer<CheddarModPlayer>();
             modPlayer.hero = true;
 
-            player.meleeSpeed -= 0.10f;
-            player.meleeDamage += 0.05f;
-            player.meleeCrit += 5;
+            player.GetAttackSpeed(DamageClass.Melee) -= 0.10f;
+            player.GetDamage(DamageClass.Melee) += 0.05f;
+            player.GetCritChance(DamageClass.Generic) += 5;
         }
     }
 }

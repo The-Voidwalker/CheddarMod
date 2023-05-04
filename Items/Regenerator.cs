@@ -1,4 +1,5 @@
 using Terraria;
+using Terraria.GameContent.Creative;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,15 +11,16 @@ namespace CheddarMod.Items
         {
             DisplayName.SetDefault("Regenerator");
             Tooltip.SetDefault("Increases life regeneration by 1\nBoosts healing potion effectiveness by 20%");
+            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
         }
 
         public override void SetDefaults()
         {
-            item.width = 20;
-            item.height = 20;
-            item.value = 20000;
-            item.rare = ItemRarityID.LightRed;
-            item.accessory = true;
+            Item.width = 20;
+            Item.height = 20;
+            Item.value = 20000;
+            Item.rare = ItemRarityID.LightRed;
+            Item.accessory = true;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
@@ -30,12 +32,11 @@ namespace CheddarMod.Items
 
         public override void AddRecipes()
         {
-            ModRecipe recipe = new ModRecipe(mod);
+            Recipe recipe = CreateRecipe();
             recipe.AddIngredient(ItemID.LifeCrystal);
             recipe.AddIngredient(ItemID.BottledHoney, 5);
             recipe.AddTile(TileID.Anvils);
-            recipe.SetResult(this);
-            recipe.AddRecipe();
+            recipe.Register();
         }
     }
 }
